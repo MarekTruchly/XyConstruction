@@ -51,3 +51,4 @@ User friendly design:
   Export button for print charts
   Tooltips
 ```
+Tested on Google Chrome and MS Edge.
