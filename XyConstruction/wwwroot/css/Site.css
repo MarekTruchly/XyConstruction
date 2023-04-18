@@ -1,0 +1,60 @@
+body {
+    background-color: rgba(var(--bs-dark-rgb));
+    color: white;
+    padding-top: 5rem;
+}
+
+h2 {
+    text-align: center;
+}
+
+.nav-link {
+    font-size: 1.5rem;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.chart {
+    width: 48%;
+    border: 5px solid #005385;
+    border-radius: 15px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.button-container {
+    margin-top: 1rem;
+    text-align: center;
+    height: 2rem;
+    width: auto;
+}
+
+#accordion {
+    margin: 0 auto;
+    height: 60vh;
+    width: 50vw;
+}
+
+    #accordion h1 {
+        font-size: 20px;
+    }
+
+    #accordion h1,
+    #accordion p {
+        margin: 0;
+        padding: 0 1rem;
+    }
+
+@media (max-width: 769px) {
+    .chart {
+        width: 100%;
+    }
+
+    #accordion {
+        width: 90vw;
+    }
+}

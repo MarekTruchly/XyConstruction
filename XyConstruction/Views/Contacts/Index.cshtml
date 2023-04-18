@@ -1,0 +1,42 @@
+﻿@using XyConstruction.Models
+
+<h2>Contacts</h2>
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div id="accordion">
+    @(Html.DevExtreme().Accordion()
+        .ID("accordion-container")
+        .DataSource(d => d.Mvc().LoadAction("GetData").Key("ID"))
+        .AnimationDuration(300)
+        .Collapsible(true)
+        .Multiple(false)
+        .SelectedItems("")
+        .ItemTitleTemplate(@<text><h1><%- Country %></h1></text>)
+        .ItemTemplate(@<text>
+            <div class="accodion-item">
+                <div>
+                    <h1><%- Name %></h1>
+                    <p>
+                        <b><%- City %></b>
+                    </p>
+                    <p>
+                        <span><%- ZipCode %></span>
+                        <span><%- Address %></span>
+                    </p>
+                </div>
+                <div>
+                    <p>Phone: <b><%- Phone %></b></p>
+                    <p>Email: <a href="mailto:<%- Email %>"><%- Email %></a></p>
+                </div>
+            </div>
+        </text>)
+        )
+
+
+
+</div>
+
+
+

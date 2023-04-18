@@ -1,0 +1,195 @@
+@using XyConstruction.Models
+
+<h2>Revenue</h2>
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="chart-container">
+
+
+
+    <div class="chart">
+
+        @(Html.DevExtreme().Chart()
+            .DataSource(Url.Action("ChartData", "Home"))
+            .Rotated(true)
+            .CommonSeriesSettings(s => s
+            .ArgumentField("Country")
+            .Type(SeriesType.StackedBar)
+            )
+            .Series(series => series
+            .Add()
+            .ArgumentField("Country")
+            .ValueField("Revenue")
+            )
+            .Legend(l => l
+            .Visible(false)
+            )
+            .Title("Total Revenue per Country")
+            .OnPointClick("handlePointClick")
+            .Tooltip(t => t
+            .Enabled(true)
+            .Format(Format.Millions)
+            .CustomizeTooltip(@<text>
+                function(arg) {
+                return {text: arg.argumentText + " | Total rev.:" + arg.valueText + "<br /> Detail on double click"};
+                }
+            </text>)
+            )
+
+            )
+    </div>
+
+    <div class="chart">
+        @(Html.DevExtreme().PieChart()
+            .ID("chart-pie")
+            .DataSource(Url.Action("AllProjectsChartData", "Home"))
+            .Series(series => series
+            .Add()
+            .ArgumentField("ProjectName")
+            .ValueField("Revenue")
+            .Label(l => l
+            .Visible(true)
+            .Position(PieChartLabelPosition.Inside)
+            .RadialOffset(50)
+            .BackgroundColor("transparent")
+            .Format(Format.Millions)
+            .Font(f => f
+            .Size(12)
+            .Weight(600)
+            )
+            .CustomizeText("customizeLabelText")
+            )
+
+            )
+            .Tooltip(t => t
+            .Enabled(true)
+            .Format(Format.Millions)
+            .CustomizeTooltip(@<text>
+                function(arg) {
+                return {text: arg.argumentText + " | Rev.: " + arg.valueText};
+                }
+            </text>)
+
+            )
+            .Title("Revenue Distribution by Project")
+            .Export(e => e.Enabled(true))
+
+
+            )
+
+        <div class="button-container">
+            @(Html.DevExtreme().Button()
+                .ID("backButton")
+                .Text("Back to all projects")
+                .Icon("chevronleft")
+                .Visible(false)
+                .OnClick("buttonClickHandler")
+                )
+        </div>
+
+    </div>
+
+
+    <script>
+
+        var isFirstLevel = true;
+        var touchStartTime;
+        var lastTouch;
+        /*Make button visible in detailed view*/
+        function buttonClickHandler() {
+            if (!isFirstLevel) {
+                isFirstLevel = true;
+                refreshDataSource();
+                this.option("visible", false);
+            }
+        }
+        /*Back to All project chart*/
+        function refreshDataSource() {
+            var dataSource = $("#chart-pie").dxPieChart("instance");
+            var allData = '@Url.Action("AllProjectsChartData", "Home")';
+            const title = 'Revenue Distribution by Project';
+
+
+            dataSource.option("dataSource", allData );
+            dataSource.option("title", title);
+        }
+
+        /*Check mouse or touch doubleclick*/
+        function handlePointClick(info) {
+
+            if (info.event.pointerType === "mouse" && info.event.detail === 2) {
+                    onPointDoubleClick(info);
+                }
+             else {
+                 if (info.event.pointerType === "touch" ) {
+                    var now = new Date().getTime();
+                    var timeSinceLastTouch = now - (touchStartTime || now-301);
+
+                    touchStartTime = now;
+
+                    if (timeSinceLastTouch < 300) {
+                        onPointDoubleClick(info);
+                    }
+
+                    lastTouch = info.event;
+                    return false;
+                }
+            }
+        }
+        /*Function for detail view */
+        function onPointDoubleClick(info) {
+            var country = info.target.argument;
+
+            updatePieChartData(country);
+            updatePieChartTitle(country);
+            console.log(country);
+
+                if (isFirstLevel) {
+                    $("#backButton")
+                        .dxButton("instance")
+                        .option("visible", true);
+                    isFirstLevel = false;
+                }
+        }
+        /*Update chart for detail view */
+        function updatePieChartData(country) {
+            var pieChart = $("#chart-pie").dxPieChart("instance");
+            var newUrl = '@Url.Action("ProjectChartData", "Home")?country=' + country;
+            console.log(newUrl);
+
+            pieChart.option("dataSource", newUrl);
+        }
+        /*Update title for detail view */
+        function updatePieChartTitle(country) {
+            var pieChart = $("#chart-pie").dxPieChart("instance");
+            var newTitle = country;
+
+            pieChart.option("title", newTitle);
+        }
+        /* Responsive features (change label text and hide legend on pie chart for small screen) */
+        function customizeLabelText(arg) {
+            var screenWidth = screen.width;
+            if (screenWidth <= 768) {
+                if(!isFirstLevel){
+                return arg.valueText;}
+            } else {
+                return arg.argumentText + " (" + arg.valueText + ")";
+            }
+        }
+
+        $(function () {
+            var pieChart = $("#chart-pie").dxPieChart("instance");
+
+
+                var screenWidth = screen.width;
+                if (screenWidth < 768) {
+                    pieChart.option("legend.visible", false);
+                }
+
+        });
+
+
+    </script>
+</div>
