@@ -44,7 +44,7 @@ namespace XyConstruction.Models
     {
         public static List<ProjectRevenue> GetProjectRevenues()
         {
-            var connectionString = "Server=mysql80.r4.websupport.sk;Database=ConstructionDashboard;Uid=testovacie;Pwd=Test1234;";
+            var connectionString = "Server=mysql80.r4.websupport.sk;Database=ConstructionDashboard;Uid=xxx;Pwd=xxx;";
             /*Write this code to connectionString to use local MSSQL server*/
             /*"Data Source="Localhost server name";Initial Catalog="Database name";Integrated Security=True;Encrypt=false";*/
 
