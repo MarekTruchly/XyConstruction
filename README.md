@@ -28,6 +28,7 @@ $ Check XyConstruct/Models/DataRepository.cs and rewrite
 $ Build project
 $ Release project
 ```
+Or download release -> xyconstruction-v2.rar and run .exe file.
 
 ## Overview
 
